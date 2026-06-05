@@ -30,11 +30,7 @@ def logout_view(request):
 
 
 def home(request):
-    return render(request, 'store/home.html', {
-        'shops': Shop.objects.all()[:6],
-        'products': Product.objects.filter(in_stock=True)[:8],
-        'categories': Category.objects.all(),
-    })
+    return render(request, 'store/home.html', {'shops': Shop.objects.all()[:6],'products': Product.objects.filter(in_stock=True)[:8],'categories': Category.objects.all(),})
 
 
 def shop_list(request):
