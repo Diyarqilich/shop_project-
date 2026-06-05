@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+  <div class="breadcrumb">
+    <a href="{% url 'shop:home' %}">🏠 Asosiy</a>
+    <span>/</span>
+    <a href="{% url 'shop:product_list' %}">Mahsulotlar</a>
+    <span>/</span>
+    <a href="{{ product.shop.get_absolute_url }}">{{ product.shop.name }}</a>
+    <span>/</span>
+    <span>{{ product.name }}</span>
+  </div>
+
+  <div class="detail-hero">
+    <div class="detail-img">
+      {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}">
+      {% else %}📦{% endif %}
+    </div>
+    <div class="detail-body">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
+        <div>
+          <h1 class="detail-title">{{ product.name }}</h1>
+          <div class="detail-meta">
+            <span>🏪 <a href="{{ product.shop.get_absolute_url }}" style="color:var(--accent);text-decoration:none;">{{ product.shop.name }}</a></span>
+            <span>📅 {{ product.created_at|date:"d.m.Y" }}</span>
+            <span class="badge-stock {% if product.in_stock %}in{% else %}out{% endif %}" style="position:static;">
+              {% if product.in_stock %}✓ Mavjud{% else %}✗ Tugagan{% endif %}
+            </span>
+          </div>
+        </div>
+        {% if user == product.shop.owner %}
+        <div class="product-actions">
+          <a href="{% url 'shop:product_edit' product.slug %}" class="btn btn-outline btn-sm">✏️ Tahrirlash</a>
+          <a href="{% url 'shop:product_delete' product.slug %}" class="btn btn-danger btn-sm">🗑️ O'chirish</a>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if product.categories.all %}
+      <div class="product-card-cats" style="margin-bottom:1rem;">
+        {% for cat in product.categories.all %}
+        <a href="{% url 'shop:category_filter' cat.slug %}" class="cat-tag">{{ cat.name }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="detail-price">{{ product.price|floatformat:0 }} so'm</div>
+
+      {% if product.description %}
+      <div style="color:var(--text-dim);line-height:1.7;margin-bottom:1.5rem;">{{ product.description }}</div>
+      {% endif %}
+
+      <a href="{{ product.shop.get_absolute_url }}" class="btn btn-primary">🏪 Do'konga o'tish</a>
+    </div>
+  </div>
+
+  <!-- Related -->
+  {% if related %}
+  <div class="section-header" style="margin-top:2.5rem;">
+    <div class="section-title"><span class="icon">✨</span> O'xshash mahsulotlar</div>
+  </div>
+  <div class="cards-grid">
+    {% for product in related %}
+    {% include 'store/_product_card.html' %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

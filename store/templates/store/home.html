@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}ShopHub — Asosiy sahifa{% endblock %}
+
+{% block content %}
+<div class="hero container">
+  <div class="hero-badge">🚀 Yangi do'konlar va mahsulotlar</div>
+  <h1>O'zbek <span class="gradient">Online Bozori</span></h1>
+  <p>Eng yaxshi do'konlar va mahsulotlar bir joyda. Kerakli narsangizni toping!</p>
+  <div class="hero-actions">
+    <a href="{% url 'shop:product_list' %}" class="btn btn-primary btn-lg">🛒 Mahsulotlar</a>
+    <a href="{% url 'shop:shop_list' %}" class="btn btn-outline btn-lg">🏪 Do'konlar</a>
+    {% if not user.is_authenticated %}
+    <a href="{% url 'shop:register' %}" class="btn btn-lg" style="background:var(--surface);border:1px solid var(--border);">Ro'yxatdan o'tish →</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="container page-content">
+
+  <!-- Categories -->
+  {% if categories %}
+  <div class="filter-bar">
+    <span style="font-size:.85rem;color:var(--text-dim);font-weight:600;">📂 KATEGORIYALAR:</span>
+    <div class="category-pills">
+      {% for cat in categories %}
+      <a href="{% url 'shop:category_filter' cat.slug %}" class="category-pill">{{ cat.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-value">{{ shops.count }}+</div>
+      <div class="stat-label">Do'konlar</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">{{ products.count }}+</div>
+      <div class="stat-label">Mahsulotlar</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">{{ categories.count }}</div>
+      <div class="stat-label">Kategoriyalar</div>
+    </div>
+  </div>
+
+  <!-- Shops -->
+  <div class="section-header">
+    <div class="section-title"><span class="icon">🏪</span> Yangi do'konlar</div>
+    <a href="{% url 'shop:shop_list' %}" class="btn btn-outline btn-sm">Barchasi →</a>
+  </div>
+  {% if shops %}
+  <div class="cards-grid" style="margin-bottom:2.5rem;">
+    {% for shop in shops %}
+    <a href="{{ shop.get_absolute_url }}" class="shop-card">
+      <div class="shop-card-logo">
+        {% if shop.logo %}<img src="{{ shop.logo.url }}" alt="{{ shop.name }}">
+        {% else %}🏪{% endif %}
+      </div>
+      <div class="shop-card-body">
+        <div class="shop-card-name">{{ shop.name }}</div>
+        {% if shop.address %}
+        <div class="shop-card-address">📍 {{ shop.address }}</div>
+        {% endif %}
+        <div style="margin-top:.6rem;font-size:.8rem;color:var(--text-dim);">
+          {{ shop.products.count }} ta mahsulot
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state" style="padding:2rem;">
+    <div class="icon">🏪</div>
+    <p>Hali do'konlar yo'q. <a href="{% url 'shop:shop_create' %}" style="color:var(--accent);">Birinchi bo'ling!</a></p>
+  </div>
+  {% endif %}
+
+  <!-- Products -->
+  <div class="section-header">
+    <div class="section-title"><span class="icon">✨</span> So'nggi mahsulotlar</div>
+    <a href="{% url 'shop:product_list' %}" class="btn btn-outline btn-sm">Barchasi →</a>
+  </div>
+  {% if products %}
+  <div class="cards-grid">
+    {% for product in products %}
+    {% include 'store/_product_card.html' %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="icon">📦</div>
+    <h3>Mahsulotlar yo'q</h3>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

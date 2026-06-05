@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Mahsulotlar{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+  <div class="section-header">
+    <div class="section-title"><span class="icon">📦</span> Barcha mahsulotlar</div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <form method="get" action="">
+      {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category.slug }}">{% endif %}
+      {% if in_stock_only %}<input type="hidden" name="in_stock" value="1">{% endif %}
+      <input type="text" name="q" value="{{ q }}" placeholder="🔍 Mahsulot qidiring..." class="search-input">
+      <button type="submit" class="btn btn-primary btn-sm">Qidirish</button>
+    </form>
+    <div class="category-pills">
+      <a href="{% url 'shop:product_list' %}" class="category-pill {% if not selected_category %}active{% endif %}">Barchasi</a>
+      {% for cat in categories %}
+      <a href="{% url 'shop:product_list' %}?category={{ cat.slug }}" class="category-pill {% if selected_category == cat %}active{% endif %}">{{ cat.name }}</a>
+      {% endfor %}
+    </div>
+    <a href="{% url 'shop:product_list' %}{% if selected_category %}?category={{ selected_category.slug }}&in_stock=1{% else %}?in_stock=1{% endif %}"
+       class="btn btn-sm {% if in_stock_only %}btn-success{% else %}btn-outline{% endif %}">
+      ✓ Mavjud
+    </a>
+  </div>
+
+  {% if products %}
+  <div style="color:var(--text-dim);font-size:.85rem;margin-bottom:1rem;">
+    {{ products.count }} ta natija
+    {% if q %}— "<strong style="color:var(--text);">{{ q }}</strong>" uchun{% endif %}
+    {% if selected_category %}— <strong style="color:var(--accent);">{{ selected_category.name }}</strong>{% endif %}
+  </div>
+  <div class="cards-grid">
+    {% for product in products %}
+    {% include 'store/_product_card.html' %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="icon">🔍</div>
+    <h3>Hech narsa topilmadi</h3>
+    <p>Boshqa so'z bilan qidiring</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

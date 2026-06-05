@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+  <div class="breadcrumb">
+    <a href="{% url 'shop:home' %}">🏠 Asosiy</a>
+    <span>/</span>
+    <a href="{% url 'shop:product_list' %}">Mahsulotlar</a>
+    <span>/</span>
+    <span>{{ category.name }}</span>
+  </div>
+
+  <div class="section-header">
+    <div class="section-title"><span class="icon">📂</span> {{ category.name }}</div>
+    <a href="{% url 'shop:category_filter' category.slug %}?in_stock=1"
+       class="btn btn-sm {% if in_stock_only %}btn-success{% else %}btn-outline{% endif %}">
+      ✓ Faqat mavjud
+    </a>
+  </div>
+
+  {% if products %}
+  <div style="color:var(--text-dim);font-size:.85rem;margin-bottom:1rem;">{{ products.count }} ta mahsulot</div>
+  <div class="cards-grid">
+    {% for product in products %}
+    {% include 'store/_product_card.html' %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="icon">📦</div>
+    <h3>Bu kategoriyada mahsulot yo'q</h3>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

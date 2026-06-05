@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Ro'yxatdan o'tish{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+  <div class="form-card">
+    <div class="form-title">Ro'yxatdan o'tish 🚀</div>
+    <div class="form-subtitle">Hisob yarating va do'kon oching</div>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <div class="form-error">{{ field.errors.0 }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:.5rem;">
+        Ro'yxatdan o'tish →
+      </button>
+    </form>
+    <div style="margin-top:1.2rem;text-align:center;font-size:.88rem;color:var(--text-dim);">
+      Hisobingiz bormi? <a href="{% url 'shop:login' %}" style="color:var(--accent);">Kirish</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

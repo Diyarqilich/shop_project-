@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}O'chirish{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+  <div class="confirm-card">
+    <div class="danger-icon">🗑️</div>
+    <h2>Mahsulotni o'chirasizmi?</h2>
+    <p><strong>{{ product.name }}</strong> mahsulotini o'chirishni tasdiqlaysizmi? Bu amalni qaytarib bo'lmaydi.</p>
+    <div class="confirm-actions">
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Ha, o'chirish</button>
+      </form>
+      <a href="{{ product.get_absolute_url }}" class="btn btn-outline">Bekor qilish</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

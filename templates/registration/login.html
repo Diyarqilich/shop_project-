@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Kirish{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+  <div class="form-card">
+    <div class="form-title">Kirish 👋</div>
+    <div class="form-subtitle">Hisobingizga kiring</div>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <div class="form-error">{{ field.errors.0 }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% if form.non_field_errors %}
+      <div class="form-error" style="margin-bottom:1rem;">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:.5rem;">Kirish →</button>
+    </form>
+    <div style="margin-top:1.2rem;text-align:center;font-size:.88rem;color:var(--text-dim);">
+      Hisobingiz yo'qmi? <a href="{% url 'shop:register' %}" style="color:var(--accent);">Ro'yxatdan o'ting</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

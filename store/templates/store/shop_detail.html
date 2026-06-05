@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}{{ shop.name }}{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+  <div class="breadcrumb">
+    <a href="{% url 'shop:home' %}">🏠 Asosiy</a>
+    <span>/</span>
+    <a href="{% url 'shop:shop_list' %}">Do'konlar</a>
+    <span>/</span>
+    <span>{{ shop.name }}</span>
+  </div>
+
+  <!-- Shop header -->
+  <div class="detail-hero" style="margin-bottom:2rem;">
+    <div style="display:flex;align-items:center;gap:1.5rem;padding:2rem;flex-wrap:wrap;">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden;flex-shrink:0;">
+        {% if shop.logo %}<img src="{{ shop.logo.url }}" style="width:100%;height:100%;object-fit:cover;">
+        {% else %}🏪{% endif %}
+      </div>
+      <div style="flex:1;">
+        <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:.3rem;">{{ shop.name }}</h1>
+        {% if shop.address %}
+        <div style="color:var(--text-dim);font-size:.9rem;margin-bottom:.5rem;">📍 {{ shop.address }}</div>
+        {% endif %}
+        <div style="font-size:.85rem;color:var(--text-dim);">
+          👤 <strong style="color:var(--text);">{{ shop.owner.username }}</strong> &nbsp;·&nbsp;
+          📦 {{ shop.products.count }} ta mahsulot
+        </div>
+      </div>
+      {% if user == shop.owner %}
+      <a href="{% url 'shop:product_create' shop.slug %}" class="btn btn-primary">+ Mahsulot qo'shish</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <div class="category-pills">
+      <a href="{{ shop.get_absolute_url }}" class="category-pill {% if not selected_category and not in_stock_only %}active{% endif %}">Barchasi</a>
+      {% for cat in categories %}
+      <a href="{{ shop.get_absolute_url }}?category={{ cat.slug }}" class="category-pill {% if selected_category == cat %}active{% endif %}">{{ cat.name }}</a>
+      {% endfor %}
+    </div>
+    <a href="{{ shop.get_absolute_url }}{% if selected_category %}?category={{ selected_category.slug }}&in_stock=1{% else %}?in_stock=1{% endif %}"
+       class="btn btn-sm {% if in_stock_only %}btn-success{% else %}btn-outline{% endif %}">
+      ✓ Faqat mavjud
+    </a>
+  </div>
+
+  {% if products %}
+  <div class="cards-grid">
+    {% for product in products %}
+    {% include 'store/_product_card.html' %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="icon">📦</div>
+    <h3>Mahsulotlar yo'q</h3>
+    {% if user == shop.owner %}
+    <a href="{% url 'shop:product_create' shop.slug %}" class="btn btn-primary" style="margin-top:1rem;">+ Mahsulot qo'shish</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

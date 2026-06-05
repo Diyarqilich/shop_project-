@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Do'konlar{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+  <div class="section-header">
+    <div class="section-title"><span class="icon">🏪</span> Barcha do'konlar</div>
+    {% if user.is_authenticated %}
+    <a href="{% url 'shop:shop_create' %}" class="btn btn-primary btn-sm">+ Yangi do'kon</a>
+    {% endif %}
+  </div>
+
+  {% if shops %}
+  <div class="cards-grid">
+    {% for shop in shops %}
+    <a href="{{ shop.get_absolute_url }}" class="shop-card">
+      <div class="shop-card-logo">
+        {% if shop.logo %}<img src="{{ shop.logo.url }}" alt="{{ shop.name }}">
+        {% else %}🏪{% endif %}
+      </div>
+      <div class="shop-card-body">
+        <div class="shop-card-name">{{ shop.name }}</div>
+        {% if shop.address %}
+        <div class="shop-card-address">📍 {{ shop.address }}</div>
+        {% endif %}
+        <div style="margin-top:.7rem;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:.8rem;color:var(--text-dim);">{{ shop.products.count }} mahsulot</span>
+          <span style="font-size:.78rem;color:var(--text-dim);">👤 {{ shop.owner.username }}</span>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="icon">🏪</div>
+    <h3>Hali do'konlar yo'q</h3>
+    <p>Birinchi do'konni oching!</p>
+    {% if user.is_authenticated %}
+    <a href="{% url 'shop:shop_create' %}" class="btn btn-primary" style="margin-top:1rem;">+ Do'kon ochish</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

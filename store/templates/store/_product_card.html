@@ -1,0 +1,26 @@
+<div class="product-card" style="animation-delay:{{ forloop.counter0 }}00ms">
+  <div class="product-card-img">
+    {% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    {% else %}📦{% endif %}
+    <span class="badge-stock {% if product.in_stock %}in{% else %}out{% endif %}">
+      {% if product.in_stock %}✓ Mavjud{% else %}✗ Tugagan{% endif %}
+    </span>
+  </div>
+  <div class="product-card-body">
+    <a href="{{ product.get_absolute_url }}" class="product-card-name">{{ product.name }}</a>
+    {% if product.categories.all %}
+    <div class="product-card-cats">
+      {% for cat in product.categories.all|slice:":3" %}
+      <a href="{% url 'shop:category_filter' cat.slug %}" class="cat-tag">{{ cat.name }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="product-card-footer">
+      <div class="product-price" data-price="{{ product.price }}">
+        {{ product.price|floatformat:0 }} so'm
+      </div>
+      <a href="{{ product.get_absolute_url }}" class="btn btn-outline btn-sm">Ko'rish</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+  <div class="form-card">
+    <div class="form-title">{{ title }} 🏪</div>
+    <div class="form-subtitle">Do'kon ma'lumotlarini kiriting</div>
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <div class="form-error">{{ field.errors.0 }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      <div style="display:flex;gap:.8rem;margin-top:1.5rem;">
+        <button type="submit" class="btn btn-primary">💾 Saqlash</button>
+        <a href="{% url 'shop:shop_list' %}" class="btn btn-outline">Bekor qilish</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
